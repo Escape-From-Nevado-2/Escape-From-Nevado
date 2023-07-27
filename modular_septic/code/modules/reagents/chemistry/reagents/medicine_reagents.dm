@@ -321,8 +321,7 @@
 	if(HAS_TRAIT(M, TRAIT_HEROIN_JUNKIE))
 		M.reagents.remove_all_type(src.type)
 	else
-		C.set_heartattack(TRUE)
-		C.HeadRape(4 SECONDS)
+		addtimer(CALLBACK(src, .proc/overdose_effects_delayed, C), 4 SECONDS)
 
 /datum/reagent/medicine/blacktar/on_mob_metabolize(mob/living/L)
 	. = ..()
@@ -341,6 +340,12 @@
 		var/mob/living/carbon/C = L
 		if(C.diceroll(GET_MOB_ATTRIBUTE_VALUE(C, STAT_ENDURANCE)) <= DICE_FAILURE)
 			C.vomit(20, TRUE, TRUE)
+
+/datum/reagent/medicine/blacktar/proc/overdose_effects_delayed(mob/living/carbon/junkie)
+	if(HAS_TRAIT(junkie, TRAIT_HEROIN_JUNKIE) || HAS_TRAIT(junkie, TRAIT_OVERDOSE_IMMUNE))
+		return
+	junkie.set_heartattack(TRUE)
+	junkie.HeadRape(4 SECONDS)
 
 //Pink Turbid
 /datum/reagent/medicine/pinkturbid
@@ -514,8 +519,8 @@
 	if(!iscarbon(M))
 		return
 	var/mob/living/carbon/C = M
-	C.set_heartattack(TRUE)
 	C.client?.give_award(/datum/award/achievement/misc/copium, C)
+	addtimer(CALLBACK(src, .proc/overdose_effects_delayed, C), 2 SECONDS)
 
 /datum/reagent/medicine/copium/on_mob_metabolize(mob/living/L)
 	. = ..()
@@ -531,6 +536,12 @@
 	to_chat(L, span_achievementneutral("My skin doesn't feel numb anymore."))
 	L.remove_chem_effect(CE_PAINKILLER, "[type]")
 	L.remove_chem_effect(CE_PULSE, "[type]")
+
+/datum/reagent/medicine/copium/proc/overdose_effects_delayed(mob/living/carbon/junkie)
+	if(HAS_TRAIT(junkie, TRAIT_OVERDOSE_IMMUNE))
+		return
+	junkie.set_heartattack(TRUE)
+	junkie.HeadRape(4 SECONDS)
 
 //Radiation sickness medication
 /datum/reagent/medicine/potass_iodide
