@@ -29,6 +29,7 @@
 	name = "Inborn uniform"
 
 	uniform = /obj/item/clothing/under/stray
+	l_pocket = /obj/item/reagent_containers/hypospray/medipen/retractible/blacktar
 	r_pocket = /obj/item/keycard/inborn
 	gloves = /obj/item/clothing/gloves/color/black
 	shoes = /obj/item/clothing/shoes/jackboots
